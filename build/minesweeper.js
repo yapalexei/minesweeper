@@ -1,7 +1,7 @@
 var Sweeper = Sweeper || function(options) {
     this.fieldSelector = options.selector || '.mine-field';
     this.width = options.width || 300;
-    this.recursive = options.recursive;
+    this.recursive = !!options.recursive;
     this.rowCount = options.rowCount || 15;
     this.columnCount = options.columnCount || 15;
     this.useHeatMap = !!options.useHeatMap;
@@ -10,6 +10,10 @@ var Sweeper = Sweeper || function(options) {
 Sweeper.prototype.init = function() {
     this.gameEl = document.querySelector('.game'); //fix this
     this.fieldEl = document.querySelector(this.fieldSelector);
+    if (!this.fieldEl) {
+        console.error('Could not find element with class', this.fieldSelector);
+        return;
+    }
     this.fieldEl.style.width = this.width + 'px';
     this.spaceBetween = 6;
     this.cells = [];
@@ -171,6 +175,9 @@ Sweeper.prototype._checkBleed = function(loc) {
 Sweeper.prototype.lost = function() {
     var cells = this.cells;
     for (var i = 0;  i < cells.length; i++) {
-        cells[i].input.checked = true;
+        setTimeout(function(index){
+            cells[index].input.checked = true;    
+        }, ~~(Math.random() * 1000), i);
+        
     }  
 };
